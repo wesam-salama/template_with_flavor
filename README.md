@@ -42,7 +42,7 @@ dart run change_app_package_name:main com.new.package.name --ios
 
 ### 2. 🎨 Updating App Icons
 
-Support for multiple flavors means you can have different icons for development, staging, and production.
+This project leverages the [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons) package to generate and manage app icons for each flavor (Dev, Stage, Prod).
 
 #### Step 1: Place Asset Files
 Add your icon files to `assets/launcher_icon/`. Ensure naming corresponds to your config:
