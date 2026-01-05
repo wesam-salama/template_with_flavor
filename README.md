@@ -37,4 +37,36 @@ dart run flutter_launcher_icons -f flutter_launcher_icons-stage.yaml
 
 # Generate Prod Icons
 dart run flutter_launcher_icons -f flutter_launcher_icons-prod.yaml
+
+dart run flutter_launcher_icons -f flutter_launcher_icons-dev.yaml && dart run flutter_launcher_icons -f flutter_launcher_icons-stage.yaml && dart run flutter_launcher_icons -f flutter_launcher_icons-prod.yaml
 ```
+
+## ✅ Build Commands for Flutter Flavors
+
+### 📱 Android:
+
+```bash
+flutter run -t lib/main_dev.dart --flavor dev
+flutter run -t lib/main_stage.dart --flavor stage
+flutter run -t lib/main_prod.dart --flavor prod
+```
+
+### 📦 Android APK build:
+```bash
+flutter build apk -t lib/main_dev.dart --flavor dev
+flutter build apk -t lib/main_stage.dart --flavor stage
+flutter build apk -t lib/main_prod.dart --flavor prod
+```
+
+### 🍏 iOS:
+```bash
+flutter run -t lib/main_dev.dart --flavor dev
+flutter run -t lib/main_stage.dart --flavor stage
+flutter run -t lib/main_prod.dart --flavor prod
+```
+
+### 📦 iOS Release build (via Xcode):
+
+1. Open `ios/Runner.xcworkspace`
+2. Select the appropriate scheme (**Dev** / **Stage** / **Prod**)
+3. Build or archive from Xcode
