@@ -1,0 +1,9 @@
+flutter_launcher_icons:
+  image_path: "assets/launcher_icon/dev-icon.png"
+  # Generate ic_launcher in android/app/src/dev/res/
+  android: true
+  # Generate AppIcon-dev in ios/Runner/Assets.xcassets/
+  ios: "AppIcon-dev"
+  remove_alpha_ios: true
+  # Specifies the flavor for Android resource placement
+  flavor: dev

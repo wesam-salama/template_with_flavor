@@ -1,0 +1,9 @@
+flutter_launcher_icons:
+  image_path: "assets/launcher_icon/prod-icon.png"
+  # Generate ic_launcher in android/app/src/prod/res/
+  android: true
+  # Generate AppIcon-prod in ios/Runner/Assets.xcassets/
+  ios: "AppIcon-prod"
+  remove_alpha_ios: true
+  # Specifies the flavor for Android resource placement
+  flavor: prod
