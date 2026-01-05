@@ -36,17 +36,16 @@ android {
         create("dev") {
             dimension = "default"
             applicationIdSuffix = ".dev"
-            resValue("string", "app_name", "Project Template Dev")
+            versionNameSuffix = "-dev"
         }
         create("stage") {
             dimension = "default"
             applicationIdSuffix = ".stage"
-            resValue("string", "app_name", "Project Template Stage")
+            versionNameSuffix = "-stage"
         }
         create("prod") {
             dimension = "default"
             // No suffix for prod
-            resValue("string", "app_name", "Project Template")
         }
     }
 

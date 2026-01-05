@@ -15,7 +15,7 @@ This is a robust **Flutter Project Template** pre-configured with support for mu
 
 - **🏗️ Multiple Flavors**: Pre-configured environments for `Dev`, `Stage`, and `Prod`.
 - **🎨 Dynamic App Icons**: Distinct icons for each environment to easily identify builds.
-- **🏷️ Start Package Renaming**: Utilities to easily update your app's bundle ID and package name.
+- **🏷️ App & Package Renaming**: Utilities to easily update your App Name, Bundle ID, and Package Name.
 - **📱 Platform Support**: Ready for iOS and Android.
 
 ---
@@ -40,7 +40,25 @@ dart run change_app_package_name:main com.new.package.name --android
 dart run change_app_package_name:main com.new.package.name --ios
 ```
 
-### 2. 🎨 Updating App Icons
+### 2. 🏷️ Change App Name
+
+This project uses the [`rename`](https://pub.dev/packages/rename) package to easily update the App Name across platforms.
+
+**Update for all platforms:**
+```bash
+dart run rename setAppName --targets ios,android --value "Your New App Name"
+```
+
+**Update for specific platform:**
+```bash
+# 🤖 Android only
+dart run rename setAppName --targets android --value "Your New App Name"
+
+# 🍎 iOS only
+dart run rename setAppName --targets ios --value "Your New App Name"
+```
+
+### 3. 🎨 Updating App Icons
 
 This project leverages the [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons) package to generate and manage app icons for each flavor (Dev, Stage, Prod).
 
