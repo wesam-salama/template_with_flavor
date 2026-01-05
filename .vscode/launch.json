@@ -5,21 +5,43 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "project_template",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "project_template (profile mode)",
+            "name": "Dev",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "program": "lib/main_dev.dart",
+            "flutterMode": "debug",
+            "args": [
+                "--flavor",
+                "dev",
+                "--target",
+                "lib/main_dev.dart"
+            ]
         },
         {
-            "name": "project_template (release mode)",
+            "name": "Stage",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
-        }
+            "program": "lib/main_stage.dart",
+            "flutterMode": "debug",
+            "args": [
+                "--flavor",
+                "stage",
+                "--target",
+                "lib/main_stage.dart"
+            ]
+        },
+        {
+            "name": "Prod",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_prod.dart",
+            "flutterMode": "release",
+            "args": [
+                "--flavor",
+                "prod",
+                "--target",
+                "lib/main_prod.dart"
+            ]
+        },
     ]
 }
