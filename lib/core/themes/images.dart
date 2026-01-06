@@ -1,4 +1,5 @@
 class Images {
+  // bottom navigation bar icons
   static const String bottomNavigationBarHomeSelectedIcon =
       'assets/images/bottomNavigationBar/ic_home_selected.svg';
   static const String bottomNavigationBarHomeUnselectedIcon =
