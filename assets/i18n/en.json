@@ -1,0 +1,12 @@
+{
+  "skip": "Skip",
+  "get_start": "Get Started",
+  "all_shifts": "All Shifts",
+  "available": "Available",
+  "closed": "Closed",
+  "login": "Login",
+  "login_hint": "Enter Your Cell Phone Number",
+  "or_login_using": "or login using",
+  "hello_world": "Hello World",
+  "toggle_language": "Toggle Language"
+}

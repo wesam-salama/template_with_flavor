@@ -20,6 +20,23 @@ This is a robust **Flutter Project Template** pre-configured with support for mu
 
 ---
 
+## 🛠️ Prerequisites
+
+- Flutter SDK: `^3.10.4`
+- Dart SDK: `^3.0.0`
+
+---
+
+## 🚀 Getting Started
+
+1.  **Clone the repository**.
+2.  **Install dependencies**:
+    ```bash
+    flutter pub get
+    ```
+
+---
+
 ## 🛠️ Configuration
 
 ### 1. 📦 Change App Package Name
@@ -92,6 +109,113 @@ dart run flutter_launcher_icons -f flutter_launcher_icons-stage.yaml
 dart run flutter_launcher_icons -f flutter_launcher_icons-prod.yaml
 ```
 </details>
+
+---
+
+## 📍 Routing
+
+Everything related to routing is located in `lib/core/utils/routes`. This project uses **GetX** for navigation management.
+
+**File Structure**:
+- `app_routes.dart`: Defines string constants for route names.
+- `app_pages.dart`: Maps the route names to the actual Pages and Bindings.
+
+**Usage:**
+
+1.  **Define a Route Name**:
+    Add a new constant in `app_routes.dart`:
+    ```dart
+    static const String profilePage = '/profilePage';
+    ```
+
+2.  **Register the Page**:
+    Add a `GetPage` entry in `app_pages.dart`'s `getPages()` list:
+    ```dart
+    GetPage(
+      name: Routes.profilePage,
+      page: () => const ProfilePage(),
+      binding: ProfileBinding(), // Optional: for dependency injection
+    ),
+    ```
+
+3.  **Navigate**:
+    Use GetX methods to navigate:
+    ```dart
+    // Go to a page
+    Get.toNamed(Routes.profilePage);
+
+    // Replace current page (no back button)
+    Get.offNamed(Routes.profilePage);
+    
+    // Clear stack and go to page (good for logout)
+    Get.offAllNamed(Routes.splashPage);
+    ```
+
+---
+
+## 📐 Responsive Design
+
+This project uses [`flutter_scale_kit`](https://pub.dev/packages/flutter_scale_kit) to ensure the UI looks consistent across different screen sizes.
+
+**Setup**:
+The `ScaleKitBuilder` is initialized in `lib/app.dart` with the standard design dimensions:
+- **Width**: 375px
+- **Height**: 812px
+
+**Usage**:
+Use the provided extensions to adapt your dimensions:
+
+- `.w` : Width adaptation
+- `.h` : Height adaptation
+- `.sp`: Font size adaptation (scalable pixel)
+
+```dart
+Container(
+  width: 100.w,    // Adapts to screen width
+  height: 200.h,   // Adapts to screen height
+  child: Text(
+    'Responsive Text',
+    style: TextStyle(fontSize: 16.sp), // Adapts font size
+  ),
+);
+```
+
+---
+
+## 🖼️ Assets Management
+
+Project assets are located in the `assets/` directory.
+
+**Structure**:
+```
+assets/
+├── i18n/                # Localization JSON files
+├── images/              # Image assets (grouped by feature)
+│   └── bottomNavigationBar/
+├── launcher_icon/       # App icons for flavors
+```
+
+**Adding New Assets**:
+
+1.  **Add the file**: Place your file in the appropriate subdirectory (e.g., `assets/images/home/`).
+2.  **Declare in `pubspec.yaml`**:
+    ```yaml
+    flutter:
+      assets:
+        - assets/images/home/
+    ```
+3.  **Define Constant**: Add a static constant in `lib/core/themes/images.dart` (or create a new theme file if appropriate):
+    ```dart
+    class Images {
+      static const String homeLogo = 'assets/images/home/logo.svg';
+    }
+    ```
+4.  **Use in Code**:
+    ```dart
+    SvgPicture.asset(Images.homeLogo)
+    // or
+    Image.asset(Images.homeLogo)
+    ```
 
 ---
 
