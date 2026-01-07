@@ -153,6 +153,47 @@ Everything related to routing is located in `lib/core/utils/routes`. This projec
 
 ---
 
+## 🌐 Network Module
+
+The project features a simplified, highly organized network layer built on top of [Dio](https://pub.dev/packages/dio). It's designed to be powerful yet easy to use without over-engineering.
+
+**Location**: `lib/core/network`
+
+### 🏗️ Core Components
+
+- **`ApiClient`**: The main engine for all network requests. It handles generic GET, POST, and custom requests.
+- **`ApiConstants`**: A single source of truth for your Base URL and all API endpoints.
+- **`models.dart`**: Contains standardized `ApiResponse<T>` and `ApiException` for consistent data handling.
+- **`interceptors/`**:
+  - **`AuthInterceptor`**: Automatically injects JWT Bearer tokens and handles `401 Unauthorized` errors.
+  - **`ErrorInterceptor`**: Automatically shows UI feedback (GetX Snackbars) for server errors.
+  - **`LoggingInterceptor`**: Provides clean, professional console logs using `talker_dio_logger` (Debug mode only).
+
+### ✨ Key Features
+
+- **🚀 Automatic Loading**: Just pass `showLoader: true` to any request to show the global `SpinKitCircle` dialog.
+- **🛡️ Global Error Handling**: Server errors are automatically caught and displayed to the user via Snackbars.
+- **🔑 Automatic Auth**: JWT tokens are automatically attached to headers from local storage.
+
+### 📖 Usage Example
+
+```dart
+// 1. Define your endpoint in api_constants.dart
+static const String userProfile = '/user/profile';
+
+// 2. Perform a request in your Service or Controller
+final response = await _apiClient.get(
+  ApiConstants.userProfile,
+  showLoader: true, // Shows/hides loading dialog automatically
+);
+
+if (response.success) {
+  print('Data: ${response.data}');
+}
+```
+
+---
+
 ## 📐 Responsive Design
 
 This project uses [`flutter_scale_kit`](https://pub.dev/packages/flutter_scale_kit) to ensure the UI looks consistent across different screen sizes.
