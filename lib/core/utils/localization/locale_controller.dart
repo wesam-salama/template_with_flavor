@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../services/storage.dart';
+import '../storage/storage.dart';
 import 'app_locales.dart';
 import 'app_localizations.dart';
 
 /// Controller to manage the app's locale state.
 /// It uses [GetxController] to update the UI when the locale changes.
-class LocaleController extends GetxController {
-  LocaleController(this._storage);
+class LocalizationController extends GetxController {
+  LocalizationController(this._storage);
+
+  static LocalizationController get to => Get.find();
 
   final Storage _storage;
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
-import '../../../../../core/themes/colors.dart';
-import '../../../../../core/themes/images.dart';
+import '../../../../../core/utils/constants/colors.dart';
+import '../../../../../core/utils/constants/image_strings.dart';
 import 'custom_bottom_navigation_bar_item.dart';
 
 /// Custom widget for the Bottom Navigation Bar.
@@ -27,7 +27,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       height: 83.h,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: ThemeColors.white,
+        color: AppColors.white,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -35,14 +35,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, 0),
-            color: ThemeColors.black.withOpacity(.1),
+            color: AppColors.black.withOpacity(.1),
             blurRadius: 15,
           ),
         ],
       ),
       child: Material(
         clipBehavior: Clip.none,
-        color: ThemeColors.white,
+        color: AppColors.white,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -50,27 +50,30 @@ class CustomBottomNavigationBar extends StatelessWidget {
         child: Row(
           children: [
             CustomBottomNavigationBarItem(
-              iconSelected: Images.bottomNavigationBarHomeSelectedIcon,
-              iconUnSelected: Images.bottomNavigationBarHomeUnselectedIcon,
+              iconSelected: AppImages.bottomNavigationBarHomeSelectedIcon,
+              iconUnSelected: AppImages.bottomNavigationBarHomeUnselectedIcon,
               onPressed: onPressedHome,
               selected: indexSelected == 0,
             ),
             CustomBottomNavigationBarItem(
-              iconSelected: Images.bottomNavigationBarMyShiftSelectedIcon,
-              iconUnSelected: Images.bottomNavigationBarMyShiftUnselectedIcon,
+              iconSelected: AppImages.bottomNavigationBarMyShiftSelectedIcon,
+              iconUnSelected:
+                  AppImages.bottomNavigationBarMyShiftUnselectedIcon,
               onPressed: onPressedShift,
               selected: indexSelected == 1,
             ),
             CustomBottomNavigationBarItem(
-              iconSelected: Images.bottomNavigationBarNotificationSelectedIcon,
+              iconSelected:
+                  AppImages.bottomNavigationBarNotificationSelectedIcon,
               iconUnSelected:
-                  Images.bottomNavigationBarNotificationUnselectedIcon,
+                  AppImages.bottomNavigationBarNotificationUnselectedIcon,
               onPressed: onPressedNotification,
               selected: indexSelected == 2,
             ),
             CustomBottomNavigationBarItem(
-              iconSelected: Images.bottomNavigationBarProfileSelectedIcon,
-              iconUnSelected: Images.bottomNavigationBarProfileUnselectedIcon,
+              iconSelected: AppImages.bottomNavigationBarProfileSelectedIcon,
+              iconUnSelected:
+                  AppImages.bottomNavigationBarProfileUnselectedIcon,
               onPressed: onPressedProfile,
               selected: indexSelected == 3,
             ),

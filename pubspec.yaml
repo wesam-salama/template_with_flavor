@@ -78,6 +78,7 @@ flutter:
   assets:
     - assets/i18n/
     - assets/images/bottomNavigationBar/
+    - assets/images/splash/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -101,6 +102,19 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  #
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo/Cairo-Regular.ttf
+        - asset: assets/fonts/Cairo/Cairo-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Cairo/Cairo-Black.ttf
+          weight: 900
+        - asset: assets/fonts/Cairo/Cairo-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Cairo/Cairo-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Cairo/Cairo-SemiBold.ttf
+          weight: 600
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

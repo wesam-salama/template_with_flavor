@@ -8,7 +8,7 @@ String trans(String? key) {
   if (key == null) return '';
   // Safe way to get controller, assumes it's initialized in MyApp
   try {
-    return Get.find<LocaleController>().translate(key);
+    return Get.find<LocalizationController>().translate(key);
   } catch (e) {
     return key;
   }

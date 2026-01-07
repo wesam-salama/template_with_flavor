@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
-import 'package:project_template/core/themes/colors.dart';
+
+import '../../../../../core/utils/constants/colors.dart';
 
 /// Single item in the custom bottom navigation bar.
 class CustomBottomNavigationBarItem extends StatelessWidget {
@@ -31,7 +32,7 @@ class CustomBottomNavigationBarItem extends StatelessWidget {
               width: 27.sp,
               height: 2.sp,
               decoration: BoxDecoration(
-                color: ThemeColors.primary,
+                color: AppColors.primary,
                 borderRadius: BorderRadius.circular(8),
               ),
             ),

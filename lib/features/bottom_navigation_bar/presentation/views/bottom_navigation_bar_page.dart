@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../../core/themes/colors.dart';
+import '../../../../app.dart';
+import '../../../../core/utils/constants/colors.dart';
 import '../controllers/bottom_navigation_bar_controller.dart';
 import 'widgets/custom_bottom_navigation_bar.dart';
 
@@ -24,7 +24,7 @@ class BottomNavigationBarPage extends GetView<BottomNavigationBarController> {
               controller.currentBottomNavigationBarIndex = 0;
             },
             child: Scaffold(
-              backgroundColor: ThemeColors.white,
+              backgroundColor: AppColors.white,
 
               body: _body(),
               bottomNavigationBar: _bottomNavigationBar(
@@ -39,14 +39,14 @@ class BottomNavigationBarPage extends GetView<BottomNavigationBarController> {
   /// Returns the widget for the body based on the selected index.
   Widget _body() {
     return controller.currentBottomNavigationBarIndex == 0
-        ? Container(color: ThemeColors.primary)
+        ? MyHomePage(title: 'Home')
         : controller.currentBottomNavigationBarIndex == 1
-        ? Container(color: ThemeColors.black)
+        ? Container(color: AppColors.black)
         : controller.currentBottomNavigationBarIndex == 2
-        ? Container(color: ThemeColors.black99A0AA)
+        ? Container(color: AppColors.accent)
         : controller.currentBottomNavigationBarIndex == 3
-        ? Container(color: ThemeColors.green16B730)
-        : Container(color: ThemeColors.solidBlack);
+        ? Container(color: AppColors.borderPrimary)
+        : Container(color: AppColors.buttonPrimary);
   }
 
   /// Returns the custom bottom navigation bar widget.
