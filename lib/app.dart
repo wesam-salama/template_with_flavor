@@ -4,14 +4,18 @@ import 'package:get/get.dart';
 import 'core/bindings/main_binding.dart';
 import 'core/themes/app_themes/app_theme.dart';
 import 'core/themes/controllers/theme_controller.dart';
-import 'core/utils/localization/app_localizations.dart';
-import 'core/utils/localization/locale_controller.dart';
-import 'core/utils/localization/app_locales.dart';
+// import 'core/utils/localization/app_localizations.dart';
+// import 'core/utils/localization/locale_controller.dart';
+// import 'core/utils/localization/app_locales.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/utils/routes/app_pages.dart';
-import 'core/utils/storage/storage.dart';
+// import 'core/utils/routes/app_routes_observers.dart';
+// import 'core/utils/storage/storage.dart';
+import 'core/utils/localization/app_translations.dart';
+import 'core/utils/localization/controllers/localization_controller.dart';
 import 'features/splash/presentation/views/splash_page.dart';
-import 'core/utils/localization/translation_extensions.dart';
+// import 'core/utils/localization/translation_extensions.dart';
+import 'core/utils/constants/colors.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -34,11 +38,14 @@ class MyApp extends StatelessWidget {
         // Used to manage the smart management
         smartManagement: SmartManagement.keepFactory,
 
+        // Localization configuration
+        // Used to define translations
+        translations: AppTranslations(), // App translations
         // Used to bind the locale from the controller
-        locale: LocalizationController.to.locale,
+        locale: LocalizationController.to.currentLocale,
 
         // Used to define supported locales
-        supportedLocales: AppLocales.locales,
+        supportedLocales: LocalizationController.to.supportedLocales,
 
         // Used to resolve the locale
         localeResolutionCallback:
@@ -52,25 +59,20 @@ class MyApp extends StatelessWidget {
               }
               return supportedLocales.first;
             },
-
         // Used to register localization delegates
         localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-          AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
 
+        // Navigation configuration
         // Used to set the initial page
         home: const SplashPage(),
-
         // Used to set the pages
         getPages: AppPages().getPages(),
-
         // Used to listen to navigation events
-        navigatorObservers: <NavigatorObserver>[
-          GetObserver((_) {}, Get.routing),
-        ],
+        // navigatorObservers: [AppRouteObserver()],
 
         // Used to set the app title
         title: 'Flutter Demo',
@@ -84,61 +86,188 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
+    final localizationController = Get.find<LocalizationController>();
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text(title),
+        actions: [
+          Obx(() {
+            // Access the observable to ensure Obx rebuilds when theme changes
+            // ignore: unused_local_variable
+            final mode = themeController.themeMode;
+            return IconButton(
+              icon: Icon(themeController.themeModeIcon),
+              onPressed: themeController.toggleTheme,
+              tooltip: 'Toggle Theme',
+            );
+          }),
+          IconButton(
+            icon: const Icon(Icons.language),
+            onPressed: localizationController.toggleLocale,
+            tooltip: 'Toggle Language',
+          ),
+
+          GetBuilder<LocalizationController>(
+            builder: (controller) {
+              // Ensure we match the current locale by language code to avoid DropdownButton value errors
+              final currentLocale = controller.currentLocale;
+              final theme = Theme.of(context);
+              final isDark = theme.brightness == Brightness.dark;
+
+              return DropdownButton<Locale>(
+                value: currentLocale,
+                icon: Icon(
+                  Icons.language,
+                  color:
+                      theme.appBarTheme.iconTheme?.color ??
+                      (isDark ? AppColors.white : AppColors.black),
+                ),
+                underline:
+                    const SizedBox(), // Remove underline for cleaner look
+                dropdownColor: isDark ? AppColors.dark : AppColors.white,
+                style: TextStyle(
+                  color: isDark ? AppColors.white : AppColors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+                onChanged: (Locale? newLocale) {
+                  if (newLocale != null) {
+                    controller.setLocale(newLocale);
+                  }
+                },
+                items: controller.supportedLocales
+                    .map<DropdownMenuItem<Locale>>((locale) {
+                      return DropdownMenuItem<Locale>(
+                        value: locale,
+                        child: Text(
+                          controller.localeSpecificLanguageName(locale),
+                          style: TextStyle(
+                            color: isDark
+                                ? AppColors.white
+                                : AppColors.textPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      );
+                    })
+                    .toList(),
+              );
+            },
+          ),
+        ],
       ),
-      body: Center(
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(20.w),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Display translated text
+            _buildSectionHeader(context, 'Typography'),
             Text(
-              'hello_world'.translate()!,
+              'Display Large',
+              style: Theme.of(context).textTheme.displayLarge,
+            ),
+            Text(
+              'Display Medium',
+              style: Theme.of(context).textTheme.displayMedium,
+            ),
+            Text(
+              'Headline Medium',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            const SizedBox(height: 20),
-            // Button to toggle language
-            ElevatedButton(
-              onPressed: () {
-                Get.find<LocalizationController>().toggleLocale();
-              },
-              child: Text('toggle_language'.translate()!),
+            Text('Title Large', style: Theme.of(context).textTheme.titleLarge),
+            Text('Body Large', style: Theme.of(context).textTheme.bodyLarge),
+            Text('Body Medium', style: Theme.of(context).textTheme.bodyMedium),
+            Text('Label Large', style: Theme.of(context).textTheme.labelLarge),
+
+            _buildSectionHeader(context, 'Buttons'),
+            Wrap(
+              spacing: 12.w,
+              runSpacing: 12.h,
+              children: [
+                ElevatedButton(onPressed: () {}, child: const Text('Elevated')),
+                OutlinedButton(onPressed: () {}, child: const Text('Outlined')),
+                TextButton(onPressed: () {}, child: const Text('Text Info')),
+                ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.check),
+                  label: const Text('Icon'),
+                ),
+                const ElevatedButton(onPressed: null, child: Text('Disabled')),
+              ],
             ),
-            const SizedBox(height: 20),
-            const Text('You have pushed the button this many times:'),
+
+            _buildSectionHeader(context, 'Inputs'),
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'Standard Input',
+                hintText: 'Type something...',
+                prefixIcon: Icon(Icons.person),
+              ),
+            ),
+            SizedBox(height: 12.h),
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'Error State',
+                errorText: 'This field has an error',
+                prefixIcon: Icon(Icons.error),
+              ),
+            ),
+
+            _buildSectionHeader(context, 'Components'),
+            Wrap(
+              spacing: 12.w,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Checkbox(value: true, onChanged: (v) {}),
+                Checkbox(value: false, onChanged: (v) {}),
+                Switch(value: true, onChanged: (v) {}),
+                const Chip(label: Text('Chip')),
+                const CircleAvatar(child: Text('A')),
+              ],
+            ),
+
+            _buildSectionHeader(context, 'Localization'),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+              'systemLanguage'.tr,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            Text(
+              'welcomeTitle'.tr,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: () {},
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  Widget _buildSectionHeader(BuildContext context, String title) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 24.h),
+        Text(
+          title,
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        Divider(height: 16.h),
+        SizedBox(height: 8.h),
+      ],
     );
   }
 }

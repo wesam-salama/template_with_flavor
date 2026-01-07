@@ -6,10 +6,10 @@ class TAppBarTheme {
   TAppBarTheme._();
 
   static const lightAppBarTheme = AppBarTheme(
-    elevation: 0,
+    elevation: 4,
     centerTitle: false,
     scrolledUnderElevation: 0,
-    backgroundColor: Colors.transparent,
+    backgroundColor: Colors.green,
     surfaceTintColor: Colors.transparent,
     iconTheme: IconThemeData(color: AppColors.black, size: AppSizes.iconMd),
     actionsIconTheme: IconThemeData(
@@ -23,7 +23,7 @@ class TAppBarTheme {
     ),
   );
   static const darkAppBarTheme = AppBarTheme(
-    elevation: 0,
+    elevation: 4,
     centerTitle: false,
     scrolledUnderElevation: 0,
     backgroundColor: Colors.transparent,

@@ -8,5 +8,6 @@
   "login_hint": "Enter Your Cell Phone Number",
   "or_login_using": "or login using",
   "hello_world": "Hello World",
-  "toggle_language": "Toggle Language"
+  "toggle_language": "Toggle Language",
+  "current_lang": "English"
 }

@@ -8,5 +8,6 @@
   "login_hint": "ادخل رقم هاتفك",
   "or_login_using": "أو سجل دخول عبر",
   "hello_world": "مرحبا بالعالم",
-  "toggle_language": "تغيير اللغة"
+  "toggle_language": "تغيير اللغة",
+  "current_lang": "اللغة العربية"
 }

@@ -19,17 +19,19 @@ class AppPages {
   /// Defines the route for the splash page.
   GetPage<void> _prepareSplashRoutes() {
     return GetPage<void>(
-      name: Routes.splashPage,
+      name: AppRoutes.splash,
       page: () => const SplashPage(),
+      // middlewares: [AppMiddleware()],
     );
   }
 
   /// Defines the route for the bottom navigation bar page.
   GetPage<void> _prepareBottomNavigationBarPageRoutes() {
     return GetPage<void>(
-      name: Routes.bottomNavigationBarPage,
+      name: AppRoutes.bottomNavigationBar,
       page: () => const BottomNavigationBarPage(),
       binding: BottomNavigationBarBinding(),
+      // middlewares: [AppMiddleware()],
     );
   }
 }

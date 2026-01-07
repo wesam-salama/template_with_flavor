@@ -22,6 +22,6 @@ class MainController extends GetxController {
 
   /// Determines the initial route based on app state.
   String initialRoute() {
-    return Routes.bottomNavigationBarPage;
+    return AppRoutes.bottomNavigationBar;
   }
 }
