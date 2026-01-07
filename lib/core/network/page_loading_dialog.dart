@@ -1,6 +1,6 @@
-import 'package:bcrx_project/core/widgets/page_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../widgets/page_loading.dart';
 
 abstract class IPageLoadingDialog {
   PageLoadingDialogStatus showLoadingDialog();
@@ -10,10 +10,7 @@ class PageLoadingDialog implements IPageLoadingDialog {
   @override
   PageLoadingDialogStatus showLoadingDialog() {
     final Future<void> future = Get.dialog<void>(
-      WillPopScope(
-        child: const PageLoading(),
-        onWillPop: () async => false,
-      ),
+      const PopScope(child: PageLoading(), canPop: false),
       barrierDismissible: false,
     );
 

@@ -43,10 +43,8 @@ class MyApp extends StatelessWidget {
         translations: AppTranslations(), // App translations
         // Used to bind the locale from the controller
         locale: LocalizationController.to.currentLocale,
-
         // Used to define supported locales
         supportedLocales: LocalizationController.to.supportedLocales,
-
         // Used to resolve the locale
         localeResolutionCallback:
             (Locale? locale, Iterable<Locale> supportedLocales) {
@@ -73,6 +71,12 @@ class MyApp extends StatelessWidget {
         getPages: AppPages().getPages(),
         // Used to listen to navigation events
         // navigatorObservers: [AppRouteObserver()],
+        // Used to listen to navigation events
+        routingCallback: (routing) {
+          if (routing?.current == '/home') {
+            Get.snackbar("Hi", "You are on the home route");
+          }
+        },
 
         // Used to set the app title
         title: 'Flutter Demo',

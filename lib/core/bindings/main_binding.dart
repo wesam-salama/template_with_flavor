@@ -1,24 +1,40 @@
 import 'package:get/get.dart';
+import 'package:dio/dio.dart';
 import 'package:project_template/core/utils/storage/storage.dart';
+import 'package:project_template/core/network/api_client.dart';
+import 'package:project_template/core/network/page_loading_dialog.dart';
+import 'package:project_template/core/network/api_constants.dart';
 
 import '../../features/bottom_navigation_bar/presentation/controllers/bottom_navigation_bar_controller.dart';
 import '../controllers/main_controller.dart';
 import '../themes/controllers/theme_controller.dart';
 import '../utils/localization/controllers/localization_controller.dart';
-// import '../utils/localization/locale_controller.dart';
 
 /// Binds dependencies needed at the start of the application.
 class MainBinding extends Bindings {
   @override
   void dependencies() {
-    // Core controllers
+    // Core
     Get.put(ThemeController());
     Get.put(Storage());
 
+    // Network
+    Get.lazyPut(() => Dio(BaseOptions(baseUrl: ApiConstants.baseUrl)));
+    Get.lazyPut<IPageLoadingDialog>(() => PageLoadingDialog());
+
+    Get.lazyPut(
+      () => ApiClient(
+        dio: Get.find<Dio>(),
+        storage: Get.find<Storage>(),
+        loadingDialog: Get.find<IPageLoadingDialog>(),
+      ),
+    );
+
+    // Translation
     Get.put(LocalizationController(Get.find<Storage>()), permanent: true);
 
+    // Global Controllers
     Get.put(MainController(), permanent: true);
-
     Get.put(BottomNavigationBarController(), permanent: true);
   }
 }
