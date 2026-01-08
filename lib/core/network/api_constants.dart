@@ -1,7 +1,7 @@
 class ApiConstants {
   const ApiConstants._();
 
-  static const String baseUrl = 'https://example.com/api/v1';
+  static String baseUrl = '';
 
   // Auth Endpoints
   static const String login = '/auth/login';
