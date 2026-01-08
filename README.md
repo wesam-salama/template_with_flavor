@@ -14,6 +14,7 @@ This is a robust **Flutter Project Template** pre-configured with support for mu
 ## 🚀 Features
 
 - **🏗️ Multiple Flavors**: Pre-configured environments for `Dev`, `Stage`, and `Prod`.
+- **🔐 Environment Management**: Integrated `.env` support via `flutter_dotenv` for sensitive keys.
 - **🎨 Dynamic App Icons**: Distinct icons for each environment to easily identify builds.
 - **🏷️ App & Package Renaming**: Utilities to easily update your App Name, Bundle ID, and Package Name.
 - **📱 Platform Support**: Ready for iOS and Android.
@@ -112,7 +113,27 @@ dart run flutter_launcher_icons -f flutter_launcher_icons-prod.yaml
 
 ---
 
-## 📍 Routing
+## � Environment Management
+
+This project uses [`flutter_dotenv`](https://pub.dev/packages/flutter_dotenv) to manage environment variables and sensitive configuration.
+
+### 1. 📄 `.env` File
+Create a `.env` file in the root directory (it is already ignored by git).
+```env
+KEY_GOOGLE_MAP=your_google_maps_key_here
+```
+
+### 2. 🛠️ Usage
+Access your constants through the `SystemConfig` class:
+**Location**: `lib/core/utils/constants/system_config.dart`
+
+```dart
+String mapKey = SystemConfig.keyGoogleMap;
+```
+
+---
+
+## �📍 Routing
 
 Everything related to routing is located in `lib/core/utils/routes`. This project uses **GetX** for navigation management.
 
@@ -162,7 +183,7 @@ The project features a simplified, highly organized network layer built on top o
 ### 🏗️ Core Components
 
 - **`ApiClient`**: The main engine for all network requests. It handles generic GET, POST, and custom requests.
-- **`ApiConstants`**: A single source of truth for your Base URL and all API endpoints.
+- **`ApiConstants`**: Contains all API endpoints. The `baseUrl` is dynamically initialized in `main_common.dart` based on the active flavor.
 - **`models.dart`**: Contains standardized `ApiResponse<T>` and `ApiException` for consistent data handling.
 - **`interceptors/`**:
   - **`AuthInterceptor`**: Automatically injects JWT Bearer tokens and handles `401 Unauthorized` errors.
