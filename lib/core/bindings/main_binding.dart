@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
-import 'package:project_template/core/utils/storage/storage.dart';
+import 'package:project_template/core/storage/storage.dart';
 import 'package:project_template/core/network/api_client.dart';
 import 'package:project_template/core/network/page_loading_dialog.dart';
 import 'package:project_template/core/network/api_constants.dart';
@@ -8,7 +8,13 @@ import 'package:project_template/core/network/api_constants.dart';
 import '../../features/bottom_navigation_bar/presentation/controllers/bottom_navigation_bar_controller.dart';
 import '../controllers/main_controller.dart';
 import '../themes/controllers/theme_controller.dart';
-import '../utils/localization/controllers/localization_controller.dart';
+import '../localization/controllers/localization_controller.dart';
+import '../widgets/show_bottom_sheet/i_show_bottom_sheet.dart';
+import '../widgets/show_bottom_sheet/show_bottom_sheet_impl.dart';
+import '../widgets/show_dialog_helper/i_show_dialog_helper.dart';
+import '../widgets/show_dialog_helper/show_dialog_impl.dart';
+import '../widgets/show_snack_bar/i_show_snackbar.dart';
+import '../widgets/show_snack_bar/show_get_snackbar_impl.dart';
 
 /// Binds dependencies needed at the start of the application.
 class MainBinding extends Bindings {
@@ -36,5 +42,13 @@ class MainBinding extends Bindings {
     // Global Controllers
     Get.put(MainController(), permanent: true);
     Get.put(BottomNavigationBarController(), permanent: true);
+
+    // Widgets
+    Get.put<IShowDialogHelper>(ShowDialogHelperImpl(), permanent: true);
+    Get.put<IShowBottomSheetHelper>(
+      ShowBottomSheetHelperImpl(),
+      permanent: true,
+    );
+    Get.put<IShowSnakBar>(ShowSnakBarImpl(), permanent: true);
   }
 }

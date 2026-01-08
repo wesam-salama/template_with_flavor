@@ -1,6 +1,6 @@
 // import 'dart:developer';
 import 'package:get/get.dart';
-import '../utils/routes/app_pages.dart';
+import '../routes/app_pages.dart';
 // import '../utils/services/storage.dart';
 
 /// Controller for the main initialization logic (Splash screen).

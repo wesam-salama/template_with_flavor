@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:project_template/core/utils/storage/storage.dart';
+import 'package:project_template/core/storage/storage.dart';
 import 'sample_service.dart';
 
 /// An example controller showing how to use the service

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
-import '../../utils/storage/storage.dart';
+import '../../storage/storage.dart';
 
 /// Interceptor for adding authentication headers to requests
 class AuthInterceptor extends Interceptor {

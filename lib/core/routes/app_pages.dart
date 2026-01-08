@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 
-import '../../../features/bottom_navigation_bar/binding/bottom_navigation_bar_binding.dart';
-import '../../../features/bottom_navigation_bar/presentation/views/bottom_navigation_bar_page.dart';
-import '../../../features/splash/presentation/views/splash_page.dart';
+import '../../features/bottom_navigation_bar/binding/bottom_navigation_bar_binding.dart';
+import '../../features/bottom_navigation_bar/presentation/views/bottom_navigation_bar_page.dart';
+import '../../features/splash/presentation/views/splash_page.dart';
 
-part './app_routes.dart';
+part 'app_routes.dart';
 
 /// Manages the application's pages and their routes.
 class AppPages {
