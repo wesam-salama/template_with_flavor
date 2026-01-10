@@ -15,6 +15,8 @@ import '../widgets/show_dialog_helper/i_show_dialog_helper.dart';
 import '../widgets/show_dialog_helper/show_dialog_impl.dart';
 import '../widgets/show_snack_bar/i_show_snackbar.dart';
 import '../widgets/show_snack_bar/show_get_snackbar_impl.dart';
+import '../notification/i_firebase_messaging.dart';
+import '../notification/firebase_messaging_impl.dart';
 
 /// Binds dependencies needed at the start of the application.
 class MainBinding extends Bindings {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
 import 'package:get/get.dart';
 import 'core/bindings/main_binding.dart';
+import 'core/notification/firebase_messaging_impl.dart';
 import 'core/themes/app_themes/app_theme.dart';
 import 'core/themes/controllers/theme_controller.dart';
 // import 'core/utils/localization/app_localizations.dart';
@@ -109,7 +110,10 @@ class MyHomePage extends StatelessWidget {
             final mode = themeController.themeMode;
             return IconButton(
               icon: Icon(themeController.themeModeIcon),
-              onPressed: themeController.toggleTheme,
+              onPressed: () {
+                FireBaseMessagingImpl.instance.testLocalNotification();
+              },
+              // themeController.toggleTheme,
               tooltip: 'Toggle Theme',
             );
           }),

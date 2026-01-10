@@ -113,7 +113,43 @@ dart run flutter_launcher_icons -f flutter_launcher_icons-prod.yaml
 
 ---
 
-## � Environment Management
+## 🔥 Setup for a New Firebase Project
+
+If you want to use this template with a new Firebase project, follow these steps to configure the Firebase settings:
+
+### 1. 🛠️ Install Firebase CLI & FlutterFire CLI
+Ensure you have the Firebase CLI and FlutterFire CLI installed and logged in:
+```bash
+# Install Firebase CLI (if not already installed)
+curl -sL https://firebase.tools | upgrade=true bash
+
+# Log in to Firebase
+firebase login
+
+# Install FlutterFire CLI
+dart pub global activate flutterfire_cli
+```
+
+### 2. 🏗️ Configure FlutterFire
+Run the following command in the root of the project:
+```bash
+flutterfire configure
+```
+- Select your Firebase project.
+- Select the platforms you want to support (Android, iOS).
+- This command will automatically generate/update `lib/firebase_options.dart`.
+
+### 3. 🤖 Android Configuration
+After running `flutterfire configure`, the tool will update your `android/app/google-services.json`. Ensure your package names match those defined in your Firebase console.
+
+### 4. 🍎 iOS Configuration
+For iOS, the tool will update `ios/Runner/GoogleService-Info.plist`. If you are using multiple flavors, you might need to handle the plist files per flavor manually or ensure they are correctly mapped in Xcode.
+
+For more detailed information, refer to the [official FlutterFire documentation](https://firebase.google.com/docs/flutter/setup?platform=ios).
+
+---
+
+## 🔐 Environment Management
 
 This project uses [`flutter_dotenv`](https://pub.dev/packages/flutter_dotenv) to manage environment variables and sensitive configuration.
 
@@ -133,7 +169,7 @@ String mapKey = SystemConfig.keyGoogleMap;
 
 ---
 
-## �📍 Routing
+## 📍 Routing
 
 Everything related to routing is located in `lib/core/utils/routes`. This project uses **GetX** for navigation management.
 
@@ -303,7 +339,7 @@ Create release builds for Android.
 | **Stage**   | `flutter build apk -t lib/main_stage.dart --flavor stage` |
 | **Prod**    | `flutter build apk -t lib/main_prod.dart --flavor prod` |
 
-### � Build for iOS
+### 📱 Build for iOS
 
 1. Open the workspace:
    ```bash

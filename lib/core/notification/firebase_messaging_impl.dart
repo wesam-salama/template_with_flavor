@@ -1,223 +1,207 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io' as io;
-import 'package:get/get.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
 
 import '../storage/storage.dart';
 import 'i_firebase_messaging.dart';
 
 class FireBaseMessagingImpl extends IFirebaseMessaging {
   FireBaseMessagingImpl._();
-  static FireBaseMessagingImpl fireBaseMessagingImpl =
-      FireBaseMessagingImpl._();
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+
+  static FireBaseMessagingImpl instance = FireBaseMessagingImpl._();
+
+  final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
+
+  FirebaseMessaging get _fcm => FirebaseMessaging.instance;
+
+  static const String _channelId = 'high_importance_channel';
+  static const String _channelName = 'High Importance Notifications';
+  static const String _channelDescription =
+      'This channel is used for important notifications.';
 
   @override
   Future<void> configureFirebaseMessaging() async {
-    await requestIOSPermissions();
-    await setUpFlutterLocalNotification();
-    await setUpForGroundNotification();
+    await requestPermissions();
+    await _initLocalNotifications();
+    await _setupForegroundPresentation();
+
+    // Listeners
+    _listenToForegroundMessages();
+    _listenToBackgroundMessages();
+    _listenToTokenRefresh();
+
+    // Initial state
     await getTokenFirebase();
-    await handleBackGroundNotifications();
-    await handleForGroundNotifications();
-    await onChangedToken();
-    // await handleNotificationsTerminatedApp();
+    await _handleNotificationsTerminatedApp();
   }
 
   @override
-  Future<void> getTokenFirebase() async {
-    final token = await _firebaseMessaging.getToken(vapidKey: 'BDUS');
-    log('$token');
-    saveTokenFirebase(token);
-  }
+  Future<void> requestPermissions() async {
+    // Request FCM permissions
+    final settings = await _fcm.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+      provisional: true,
+    );
 
-  @override
-  Future<void> handleBackGroundNotifications() async {
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      // redirect user to specific page
-      convertMapPayLoadToNotificationEntity(message.data);
-    });
-  }
+    log('User granted permission: ${settings.authorizationStatus}');
 
-  @override
-  Future<void> handleForGroundNotifications() async {
-    final channel = getAndroidChannel();
-    FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
-      final RemoteNotification? notification = message?.notification;
-      final AndroidNotification? android = message?.notification?.android;
-
-      // If `onMessage` is triggered with a notification, construct our own
-      // local notification to show to users using the created channel.
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              // icon: '@drawable/notification_logo',
-              icon: 'mipmap/ic_launcher',
-            ),
-          ),
-          payload: json.encode(message?.data),
-        );
-      }
-    });
-  }
-
-  @override
-  Future<void> handleNotificationsTerminatedApp() async {
-    final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-    if (initialMessage != null) {
-      log('${initialMessage.data}');
-      // redirect user to specific page
-      routePage(json.encode(initialMessage.data));
+    // Create Android High Importance Channel
+    if (io.Platform.isAndroid) {
+      await _localNotifications
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >()
+          ?.createNotificationChannel(getAndroidChannel());
     }
   }
 
   @override
-  Future<void> onChangedToken() async {
-    _firebaseMessaging.onTokenRefresh.listen(saveTokenFirebase);
-  }
-
-  @override
-  Future<void> saveTokenFirebase(String? token) async {
-    log('$token');
-    // TODO(team): inject storage
-    Get.find<Storage>().fcmToken = token;
-    // Storage().fcmToken = token;
-    // TODO(team): this request for update token every changed
-    sendFcmToken();
+  Future<void> getTokenFirebase() async {
+    try {
+      final token = await _fcm.getToken();
+      if (token != null) {
+        log('FCM Token: $token');
+        await _saveTokenFirebase(token);
+      }
+    } catch (e) {
+      log('Error getting FCM token: $e');
+    }
   }
 
   @override
   AndroidNotificationChannel getAndroidChannel() {
     return const AndroidNotificationChannel(
-      'high_importance_channel', // id
-      'High Importance Notifications', // title
-      description:
-          'This channel is used for important notifications.', // description
+      _channelId,
+      _channelName,
+      description: _channelDescription,
       importance: Importance.high,
       playSound: true,
     );
   }
 
-  @override
-  Future<void> setUpFlutterLocalNotification() async {
-    final initializationSettingsIOS = DarwinInitializationSettings();
+  // --- Private Helpers ---
 
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('mipmap/ic_launcher');
+  Future<void> _saveTokenFirebase(String token) async {
+    Get.find<Storage>().fcmToken = token;
+    await _sendFcmToken();
+  }
 
-    final initializationSettings = InitializationSettings(
-      iOS: initializationSettingsIOS,
-      android: initializationSettingsAndroid,
+  Future<void> _sendFcmToken() async {
+    // TODO: Implement API call to send token to backend
+    log('Sending FCM token to backend...');
+  }
+
+  Future<void> _handleNotificationsTerminatedApp() async {
+    final initialMessage = await _fcm.getInitialMessage();
+    if (initialMessage != null) {
+      log('App opened from terminated state: ${initialMessage.data}');
+      _handleMessageRoute(initialMessage.data);
+    }
+  }
+
+  Future<void> _initLocalNotifications() async {
+    const androidSettings = AndroidInitializationSettings('mipmap/ic_launcher');
+    const iosSettings = DarwinInitializationSettings();
+
+    const initSettings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
     );
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (notificationResponse) async {
-        convertPayLoadToNotificationEntity(notificationResponse.payload);
+
+    await _localNotifications.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: (response) {
+        if (response.payload != null) {
+          final Map<String, dynamic> data = json.decode(response.payload!);
+          _handleMessageRoute(data);
+        }
       },
     );
   }
 
-  @override
-  Future<void> setUpForGroundNotification() async {
-    await _firebaseMessaging.setForegroundNotificationPresentationOptions(
+  Future<void> _setupForegroundPresentation() async {
+    debugPrint('_setupForegroundPresentation');
+    await _fcm.setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
     );
   }
 
-  @override
-  Future<void> requestIOSPermissions() async {
-    if (io.Platform.isAndroid) {
-      flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >()
-          ?.createNotificationChannel(getAndroidChannel());
-    } else {
-      flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin
-          >()
-          ?.requestPermissions(alert: true, badge: true, sound: true);
-    }
-  }
+  void _listenToForegroundMessages() {
+    debugPrint('_listenToForegroundMessages');
+    FirebaseMessaging.onMessage.listen((message) {
+      final notification = message.notification;
+      final android = message.notification?.android;
 
-  void convertPayLoadToNotificationEntity(String? payload) {
-    if (payload != null && payload.isNotEmpty) {
-      try {
-        routePage(payload);
-      } catch (e, s) {
-        log(e.toString());
-        log(s.toString());
+      if (notification != null && android != null) {
+        _localNotifications.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              _channelId,
+              _channelName,
+              channelDescription: _channelDescription,
+              icon: 'mipmap/ic_launcher',
+            ),
+          ),
+          payload: json.encode(message.data),
+        );
       }
-    }
+    });
   }
 
-  void convertMapPayLoadToNotificationEntity(Map<String, dynamic>? data) {
-    if (data != null && data.isNotEmpty) {
-      try {
-        routePage(json.encode(data));
-      } catch (e, s) {
-        log(e.toString());
-        log(s.toString());
-      }
-    }
+  void _listenToBackgroundMessages() {
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      log('App opened from background: ${message.data}');
+      _handleMessageRoute(message.data);
+    });
   }
 
-  @override
-  Future<void> sendFcmToken() async {
+  void _listenToTokenRefresh() {
+    _fcm.onTokenRefresh.listen((token) => _saveTokenFirebase(token));
+  }
+
+  void _handleMessageRoute(Map<String, dynamic> data) {
+    if (data.isEmpty) return;
+
+    log('Handling routing for data: $data');
+
+    // Example: Navigate using GetX
+    // final String? page = data['page'];
+    // if (page != null) {
+    //   Get.toNamed(page, arguments: data);
+    // }
+  }
+
+  void testLocalNotification() {
     try {
-      // Get.find<IUpdateFcmTokenUseCase>().execute();
-    } catch (e) {
-      log(e.toString());
-    }
-  }
-
-  routePage(notification) {
-    // log('runtimeType: ${jsonDecode(notification).runtimeType}');
-    //  Map notifivationData = json.decode(notification);
-    log('${notification.runtimeType}');
-    String page = jsonDecode(notification)["page"];
-    switch (page) {
-      // case 'HomePage':
-      //   Get.find<ButtomNavigationBarController>()
-      //           .currentButtomNavigationBarIndex =
-      //       0;
-      //   Get.offAllNamed(Routes.buttomNavigationBarPage);
-      //   break;
-
-      // case 'MyShiftsPage':
-      //   Get.find<ButtomNavigationBarController>()
-      //           .currentButtomNavigationBarIndex =
-      //       1;
-      //   Get.offAllNamed(Routes.buttomNavigationBarPage);
-      //   break;
-      // case 'AddShiftsPage':
-      //   // Get.find<ButtomNavigationBarController>()
-      //   //     .currentButtomNavigationBarIndex = 0;
-      //   Get.offAllNamed(Routes.buttomNavigationBarPage);
-      //   Get.toNamed(
-      //     Routes.addShiftPage,
-      //     arguments: [ShiftTypeOperationEnum.add],
-      //   );
-      //   break;
-      // default:
-      //   Get.find<ButtomNavigationBarController>()
-      //           .currentButtomNavigationBarIndex =
-      //       0;
-      //   Get.offAllNamed(Routes.buttomNavigationBarPage);
-      //   break;
+      _localNotifications.show(
+        1,
+        'Test Notification',
+        'This is a test notification',
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            _channelId,
+            _channelName,
+            channelDescription: _channelDescription,
+            icon: 'mipmap/ic_launcher',
+          ),
+        ),
+      );
+    } on Exception catch (e) {
+      log('Error showing notification: $e');
     }
   }
 }
