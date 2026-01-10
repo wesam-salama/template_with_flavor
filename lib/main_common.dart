@@ -26,10 +26,6 @@ Future<void> mainCommon({
   // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // Initialize Analytics and log app open to ensure library is linked
-  // await FirebaseAnalytics.instance.logAppOpen();
-  // FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-
   // Initialize GetX Local Storage
   await GetStorage.init();
 
