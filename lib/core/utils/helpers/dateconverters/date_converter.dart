@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../localization/controllers/localization_controller.dart';

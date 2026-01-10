@@ -10,7 +10,7 @@ class PageLoadingDialog implements IPageLoadingDialog {
   @override
   PageLoadingDialogStatus showLoadingDialog() {
     final Future<void> future = Get.dialog<void>(
-      const PopScope(child: PageLoading(), canPop: false),
+      const PopScope(canPop: false, child: PageLoading()),
       barrierDismissible: false,
     );
 
